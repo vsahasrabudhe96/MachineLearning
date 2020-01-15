@@ -20,9 +20,8 @@ print(dataset.describe())
 print(dataset.groupby('class').size())
 
 #splitting the training and test data
-array = dataset.values
-X = array[:,0:4]
-y = array[:,4]
+X = dataset.iloc[:,0:4]
+y = dataset.iloc[:,4]
 
 X_train,X_validation,Y_train,Y_validation =train_test_split(X,y,test_size = 0.2 ,random_state = 0)
 
