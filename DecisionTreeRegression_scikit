@@ -1,0 +1,61 @@
+"""
+Created on Thu Jan 16 20:27:17 2020
+
+@author: vsaha
+"""
+
+#Decision Tree Regression
+
+# Importing the libraries
+import numpy as np
+import matplotlib.pyplot as plt
+import pandas as pd
+
+# Importing the dataset
+dataset = pd.read_csv('Position_Salaries.csv')
+X = dataset.iloc[:, 1:2].values
+y = dataset.iloc[:, 2].values
+
+# Splitting the dataset into the Training set and Test set
+'''from sklearn.model_selection import train_test_split
+X_train, X_test, y_train, y_test = train_test_split(X, y, test_size = 0.2, random_state = 0)'''
+
+#since we have categorical features we will use label encoder as well as one hot encoder to convert into 1's and 0's
+#but taking a look at the data the level coloumn is acting as the encoder, HENCE NO NEED OF ONE HOT ENCODING
+ #from sklearn.preprocessing import LabelEncoder , OneHotEncoder
+ 
+#FITTING Linear Regression to th dataset
+'''from sklearn.linear_model import LinearRegression
+ lin_reg = LinearRegression()
+ lin_reg.fit(X,y)'''
+ 
+from sklearn.tree import DecisionTreeRegressor
+dtr_regressor = DecisionTreeRegressor(criterion = "mse",random_state = 0)
+dtr_regressor.fit(X,y)
+ 
+#FITTING Polynomial Regression to the dataset
+''' from sklearn.preprocessing import PolynomialFeatures
+ poly_reg = PolynomialFeatures(degree = 4)
+ X_poly = poly_reg.fit_transform(X)  #Creates a Matrix of Independent Variables with columns upto the specified degree'''
+ '''poly_reg.fit(X_poly,y)
+ lin_reg2 = LinearRegression()
+ lin_reg2.fit(X_poly,y)'''
+ 
+ 
+y_pred = dtr_regressor.predict([[6.5]])
+
+ #visualising the data for polynomial regression
+ 
+ ''' THE IMPORTANT FACT TO NOTE IS THAT, DECISION TREES ARE NONLINEAR AND NON CONTINUOUS IN NATURE, HENCE THE GRAPH WILL HAVE SOME DISCRETE VALUES
+ IF WE ARE GETTING A CONTINUOUS GRAPH THEN IT IS WRONG'''
+ 
+ 
+X_grid = np.arange(min(X),max(X),0.1) #numpy.arange([start, ]stop, [step, ]dtype=None)
+                                      #Return evenly spaced values within a given interval.
+X_grid = X_grid.reshape((len(X_grid),1)) #X_grid.reshape is used to shift the dimensions/shape of the array containing the data without changing the values of the data
+plt.scatter(X,y,color = 'red')
+plt.plot(X_grid,dtr_regressor.predict(X_grid),color = 'blue')
+plt.title('TRUTH OR BLUFF(Polynomial REGRESSION)')
+plt.xlabel('POSITION LEVEL')
+plt.ylabel('SALARY')
+plt.show()
