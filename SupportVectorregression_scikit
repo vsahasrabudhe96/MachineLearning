@@ -1,0 +1,40 @@
+"""
+Created on Wed Jan 15 23:20:18 2020
+
+@author: vsaha
+"""
+"""SVM is not a standard library and hence we will have to use feature scaling"""
+import numpy as np
+import pandas as pd
+import matplotlib.pyplot as plt
+
+
+ds = pd.read_csv('Position_Salaries.csv') #same dataset as in  Polynomial regression
+X = ds.iloc[:,1:2].values
+y = ds.iloc[:,2:].values
+
+#from sklearn.model_selection import train_test_split
+#X_train,X_test,y_train,y_test = train_test_split(X,y, test_size = 0.2,random_state = 0)
+
+# Feature scaling
+
+#if we dont follow this step then we get inaccurate result as the data is in a curved structure
+#what SVR does is it to find a plane to pass through the data points,therefore feature scaling is a must
+#Also SVR does not scale the data when we call sklearn.svm as compared to LinearRegression, where the data is scaled internally
+
+from sklearn.preprocessing import StandardScaler
+sc_X = StandardScaler()
+sc_y = StandardScaler()
+X = sc_X.fit_transform(X)
+y = sc_y.fit_transform(y)
+
+from sklearn.svm import SVR
+svr_regressor = SVR(kernel = 'rbf')
+svr_regressor.fit(X,y)
+
+
+y_pred = sc_y.inverse_transform(svr_regressor.predict(sc_X.transform([[6.5]])))
+
+plt.scatter(X,y,color = 'red')
+plt.plot(X,svr_regressor.predict(X),color = 'blue')
+plt.show()
